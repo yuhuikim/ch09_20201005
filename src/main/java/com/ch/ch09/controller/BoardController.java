@@ -20,7 +20,7 @@ public class BoardController {
 
 	@RequestMapping("list")
 	// 게시글을 읽어서 보내려는 목적
-	public String list(String pageNum, Model model) { // ++
+	public String list(Board board, String pageNum, Model model) { // ++
 
 		int rowPerPage = 10;
 
@@ -31,7 +31,8 @@ public class BoardController {
 		int currentPage = Integer.parseInt(pageNum); // String이었던 pageNum이 int 형으로 바뀐다. // ++
 
 		// 게시글이 총 몇 개인지 알아야 페이징 처리를 할 수 있기 때문에 total을 생성해준다.
-		int total = bs.getTotal();
+		// int total = bs.getTotal();
+		int total = bs.getTotal(board);
 
 		// ﻿시작번호 = (페이지 번호 -1) * 페이지당 개수 +1
 		int startRow = (currentPage - 1) * rowPerPage + 1;
@@ -39,11 +40,21 @@ public class BoardController {
 		// ﻿끝 번호 = 시작 번호 + 페이지당 개수 - 1
 		int endRow = startRow + rowPerPage - 1;
 
-		List<Board> list = bs.list(startRow, endRow);
+		board.setStartRow(startRow);
+		board.setEndRow(endRow);
+
+		// List<Board> list = bs.list(startRow, endRow);
+		// board에는 search, keyword, startRow, endRow가 들어있다.
+		List<Board> list = bs.list(board);
 
 		PagingBean pb = new PagingBean(currentPage, rowPerPage, total);
 
+		// writer, subject, content라고 되어있는 것을 한글로 바꾸기 위해서 생성
+		String[] tit = {"작성자", "제목","내용","제목+내용"};
+		model.addAttribute("tit",tit);
+		
 		model.addAttribute("list", list);
+		model.addAttribute("board", board); // board값을 보내줘야 페이지가 바뀌어도 유지된다.
 		model.addAttribute("pb", pb);
 		return "list";
 	}
@@ -81,7 +92,8 @@ public class BoardController {
 			board.setRe_level(board.getRe_level() + 1);
 			board.setRe_step(board.getRe_step() + 1);
 		} else {
-			board.setRef(number); // 답변이 아닐 때는 ref와 num의 number는 같다. //board.setNum(number); == // board.setRef(number);
+			board.setRef(number); // 답변이 아닐 때는 ref와 num의 number는 같다. //board.setNum(number); == //
+									// board.setRef(number);
 		}
 		board.setNum(number);
 		int result = bs.insert(board);

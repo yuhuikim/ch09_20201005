@@ -12,9 +12,14 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDao bd;
 
+//	@Override
+//	public List<Board> list(int startRow, int endRow) {
+//		return bd.list(startRow, endRow);
+//	}
+	
 	@Override
-	public List<Board> list(int startRow, int endRow) {
-		return bd.list(startRow, endRow);
+	public List<Board> list(Board board) {
+		return bd.list(board);
 	}
 
 	@Override
@@ -31,10 +36,10 @@ public class BoardServiceImpl implements BoardService {
 	public Board select(int num) {
 		return bd.select(num);
 	}
-
+	
 	@Override
-	public int getTotal() {
-		return bd.getTotal();
+	public int getTotal(Board board) {
+		return bd.getTotal(board);
 	}
 
 	@Override

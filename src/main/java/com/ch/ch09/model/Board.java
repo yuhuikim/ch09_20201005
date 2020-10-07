@@ -19,4 +19,12 @@ public class Board { // 게시판에 대한 DTO 생성
 	private String ip;
 	private Date reg_date;
 	private String del;
+	
+	//페이징용
+	private int startRow;
+	private int endRow;
+	
+	//검색용
+	private String search;
+	private String keyword;
 }

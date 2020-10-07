@@ -3,20 +3,35 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="boardns">
 
-	<select id="list" parameterType="map" resultType="board">
-		select * from
-		(select a.*, rownum rn from
-		                <!-- order by num desc -->
-		(select * from board order by ref desc,re_step)a )
-		where rn between #{startRow} and #{endRow}
-	</select>
-	
+	<!-- <select id="list" parameterType="map" resultType="board"> select * 
+		from (select a.*, rownum rn from order by num desc (select * from board order 
+		by ref desc,re_step)a ) where rn between #{startRow} and #{endRow} </select> -->
+
+<select id="list" parameterType="board" resultType="board">
+	select * from
+      (select a.*, rownum rn from 
+    	(select * from board 
+    	<where>
+    		<if test="keyword!=null and keyword!=''">
+    			<if test="search=='subcon'">
+    				subject like '%'||#{keyword}||'%' or
+    				content like '%'||#{keyword}||'%'
+    			</if>
+    			<if test="search!='subcon'">
+    				${search} like '%'||#{keyword}||'%'
+    			</if>
+    		</if>
+    	</where>    	
+    	order by ref desc,re_step)a )
+    		where rn between #{startRow} and #{endRow}
+</select>
+
 	<select id="maxNum" resultType="integer">
 		<!-- ref와 num이 같을 수도 있고 다를 수도 있어서 따로 생성 -->
 		select nvl(max(num),0) + 1 num
 		from board
 	</select>
-	
+
 	<insert id="insert" parameterType="board">
 
 		<!-- <selectKey keyProperty="num" order="BEFORE" resultType="integer"> 
@@ -38,9 +53,20 @@
 		num=#{num}
 	</select>
 
-	<select id="getTotal" resultType="integer">
-		select count(*) from board
-	</select>
+<select id="getTotal" parameterType="board"  resultType="integer">
+	select count(*) from board
+		<where>
+    		<if test="keyword!=null and keyword!=''">
+    			<if test="search=='subcon'">
+    				subject like '%'||#{keyword}||'%' or
+    				content like '%'||#{keyword}||'%'
+    			</if>
+    			<if test="search!='subcon'">
+    				${search} like '%'||#{keyword}||'%'
+    			</if>
+    		</if>
+    	</where>   
+</select>
 
 	<update id="update" parameterType="board">
 		update board set

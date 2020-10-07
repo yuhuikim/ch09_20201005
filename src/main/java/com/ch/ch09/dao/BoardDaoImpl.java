@@ -14,16 +14,21 @@ public class BoardDaoImpl implements BoardDao {
 	@Autowired
 	private SqlSessionTemplate sst;
 
+//	@Override
+//	public List<Board> list(int startRow, int endRow) {
+//
+//		Map<String, Integer> map = new HashMap<String, Integer>();
+//		map.put("startRow", startRow);
+//		map.put("endRow", endRow);
+//		// selectList는 값을 한 개만 보낼 수 있다. 그러므로 Map을 이용해준다.
+//		// return sst.selectList("boardns.list", startRow, endRow);
+//		return sst.selectList("boardns.list", map);
+//
+//	}
+
 	@Override
-	public List<Board> list(int startRow, int endRow) {
-
-		Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		// selectList는 값을 한 개만 보낼 수 있다. 그러므로 Map을 이용해준다.
-		// return sst.selectList("boardns.list", startRow, endRow);
-		return sst.selectList("boardns.list", map);
-
+	public List<Board> list(Board board) {
+		return sst.selectList("boardns.list", board);
 	}
 
 	@Override
@@ -42,8 +47,8 @@ public class BoardDaoImpl implements BoardDao {
 	}
 
 	@Override
-	public int getTotal() {
-		return sst.selectOne("boardns.getTotal");
+	public int getTotal(Board board) {
+		return sst.selectOne("boardns.getTotal",board);
 	}
 
 	@Override

@@ -4,7 +4,8 @@ import java.util.List;
 import com.ch.ch09.model.Board;
 
 public interface BoardService {
-	List<Board> list(int startRow, int endRow);
+	// List<Board> list(int startRow, int endRow);
+	List<Board> list(Board board);
 
 	int insert(Board board);
 
@@ -12,7 +13,7 @@ public interface BoardService {
 
 	Board select(int num);
 
-	int getTotal();
+	int getTotal(Board board);
 
 	int update(Board board);
 
